@@ -7,6 +7,7 @@ function Table() {
   const [filterComparison, setFilterComparison] = useState('maior que');
   const [filterValue, setFilterValue] = useState('0');
   const [filteredData, setFilteredData] = useState([]);
+  const [usedFilters, setUsedFilters] = useState([]);
 
   const { data } = useContext(TableContext);
 
@@ -30,19 +31,57 @@ function Table() {
     }
   };
 
+  const handleUsedFilters = () => setUsedFilters((filters) => [...filters,
+    `${filterColumn} ${filterComparison} ${filterValue}`]);
+
+  // const handleUsedFilters = () => {
+  //   switch (filterComparison) {
+  //   case 'maior que':
+  //     return setUsedFilters((filters) => [...filters,
+  //       `${filterColumn} ${filterComparison} ${filterValue}`]);
+  //   case 'menor que':
+  //     return setUsedFilters((filters) => [...filters,
+  //       `${filterColumn} menor que ${filterValue}`]);
+  //   case 'igual a':
+  //     return setUsedFilters((filters) => [...filters,
+  //       `${filterColumn} igual a ${filterValue}`]);
+  //   default:
+  //   }
+  // };
+
   const handleFilters = () => {
-    switch (filterComparison) {
-    case 'maior que':
-      return (
-        setFilteredData(data
-          .filter((item) => Number(item[filterColumn]) > Number(filterValue))));
-    case 'menor que':
-      return (setFilteredData(data
-        .filter((item) => Number(item[filterColumn]) < Number(filterValue))));
-    case 'igual a':
-      return (setFilteredData(data
-        .filter((item) => Number(item[filterColumn]) === Number(filterValue))));
-    default:
+    // handleUsedFilters();
+
+    if (usedFilters.length === 0) {
+      switch (filterComparison) {
+      case 'maior que':
+        return (
+          setFilteredData(data
+            .filter((item) => Number(item[filterColumn]) > Number(filterValue))));
+      case 'menor que':
+        return (setFilteredData(data
+          .filter((item) => Number(item[filterColumn]) < Number(filterValue))));
+      case 'igual a':
+        return (setFilteredData(data
+          .filter((item) => Number(item[filterColumn]) === Number(filterValue))));
+      default:
+      }
+    } else {
+      switch (filterComparison) {
+      case 'maior que':
+        return (
+          setFilteredData((previousData) => previousData
+            .filter((item) => Number(item[filterColumn]) > Number(filterValue))));
+      case 'menor que':
+        return (
+          setFilteredData((previousData) => previousData
+            .filter((item) => Number(item[filterColumn]) < Number(filterValue))));
+      case 'igual a':
+        return (
+          setFilteredData((previousData) => previousData
+            .filter((item) => Number(item[filterColumn]) === Number(filterValue))));
+      default:
+      }
     }
   };
 
@@ -97,12 +136,25 @@ function Table() {
         </label>
         <button
           type="button"
-          onClick={ handleFilters }
+          onClick={ () => {
+            handleUsedFilters();
+            handleFilters();
+          } }
           data-testid="button-filter"
         >
           Filtrar
         </button>
       </form>
+      {usedFilters.length > 0 && (
+        usedFilters.map((item, index) => (
+          <div
+            key={ index }
+            data-testid="filter"
+          >
+            <p>{item}</p>
+          </div>
+        ))
+      )}
       {data !== null && (
         <table>
           <thead>
