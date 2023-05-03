@@ -100,7 +100,7 @@ function Table() {
           onClick={ handleFilters }
           data-testid="button-filter"
         >
-          Filter
+          Filtrar
         </button>
       </form>
       {data !== null && (
