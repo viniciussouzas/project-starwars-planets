@@ -115,6 +115,6 @@ describe('Testes da aplicação', () => {
 
         const usedFilters = screen.getByTestId('filter');
         expect(usedFilters).toHaveTextContent('diameter maior que 10000');
-      })
+      });
     });
   });
