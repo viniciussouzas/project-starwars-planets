@@ -8,6 +8,8 @@ function Table() {
   const [filterValue, setFilterValue] = useState('0');
   const [filteredData, setFilteredData] = useState([]);
   const [usedFilters, setUsedFilters] = useState([]);
+  const [columnClasses, setColumnClasses] = useState(['population', 'orbital_period',
+    'diameter', 'rotation_period', 'surface_water', '']);
 
   const { data } = useContext(TableContext);
 
@@ -32,7 +34,12 @@ function Table() {
   };
 
   const handleUsedFilters = () => setUsedFilters((filters) => [...filters,
-    `${filterColumn} ${filterComparison} ${filterValue}`]);
+    {
+      usedColumn: filterColumn,
+      usedComparison: filterComparison,
+      usedValue: filterValue,
+    },
+  ]);
 
   const handleFilters = () => {
     if (usedFilters.length === 0) {
@@ -68,6 +75,14 @@ function Table() {
     }
   };
 
+  useEffect(() => {
+    if (usedFilters.some((item) => item.usedColumn === filterColumn)) {
+      setColumnClasses((prevClasses) => prevClasses
+        .filter((item) => item !== filterColumn));
+      setFilterColumn(columnClasses[0]);
+    }
+  }, [usedFilters, filterColumn, columnClasses]);
+
   return (
     <main>
       <form>
@@ -87,11 +102,21 @@ function Table() {
             onChange={ handleChange }
             data-testid="column-filter"
           >
-            <option value="population">population</option>
-            <option value="orbital_period">orbital_period</option>
-            <option value="diameter">diameter</option>
-            <option value="rotation_period">rotation_period</option>
-            <option value="surface_water">surface_water</option>
+            { !usedFilters.some((item) => item
+              .usedColumn === 'population')
+              && <option value="population">population</option> }
+            { !usedFilters.some((item) => item
+              .usedColumn === 'orbital_period')
+              && <option value="orbital_period">orbital_period</option> }
+            { !usedFilters.some((item) => item
+              .usedColumn === 'diameter')
+              && <option value="diameter">diameter</option> }
+            { !usedFilters.some((item) => item
+              .usedColumn === 'rotation_period')
+              && <option value="rotation_period">rotation_period</option> }
+            { !usedFilters.some((item) => item
+              .usedColumn === 'surface_water')
+              && <option value="surface_water">surface_water</option> }
           </select>
         </label>
         <label htmlFor="comparison-filter">
@@ -134,7 +159,7 @@ function Table() {
             key={ index }
             data-testid="filter"
           >
-            <p>{item}</p>
+            <p>{`${item.usedColumn} ${item.usedComparison} ${item.usedValue}`}</p>
           </div>
         ))
       )}
