@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import TableContext from '../contexts /TableContext';
+import TableContext from '../contexts/TableContext';
 
 function Table() {
   const [inputName, setInputName] = useState('');
@@ -34,24 +34,7 @@ function Table() {
   const handleUsedFilters = () => setUsedFilters((filters) => [...filters,
     `${filterColumn} ${filterComparison} ${filterValue}`]);
 
-  // const handleUsedFilters = () => {
-  //   switch (filterComparison) {
-  //   case 'maior que':
-  //     return setUsedFilters((filters) => [...filters,
-  //       `${filterColumn} ${filterComparison} ${filterValue}`]);
-  //   case 'menor que':
-  //     return setUsedFilters((filters) => [...filters,
-  //       `${filterColumn} menor que ${filterValue}`]);
-  //   case 'igual a':
-  //     return setUsedFilters((filters) => [...filters,
-  //       `${filterColumn} igual a ${filterValue}`]);
-  //   default:
-  //   }
-  // };
-
   const handleFilters = () => {
-    // handleUsedFilters();
-
     if (usedFilters.length === 0) {
       switch (filterComparison) {
       case 'maior que':
