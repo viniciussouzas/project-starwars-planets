@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import './App.css';
-import Table from './components /Table';
+import Filters from './components /Filters';
 import TableContext from './contexts/TableContext';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
       <h1>Star Wars Project</h1>
       { loading ? <p>Carregando...</p>
         : (
-          <Table />
+          <Filters />
         )}
     </div>
   );
