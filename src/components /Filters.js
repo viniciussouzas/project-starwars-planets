@@ -197,14 +197,14 @@ function Filters() {
           } }
           data-testid="button-filter"
         >
-          Filtrar
+          Filter
         </button>
         <button
           type="button"
           onClick={ removeAllFilters }
           data-testid="button-remove-filters"
         >
-          Remover Filtros
+          Remove All Filters
         </button>
       </form>
       {usedFilters.length > 0 && (
@@ -217,7 +217,7 @@ function Filters() {
             <button
               onClick={ () => removeFilter(index, item.usedColumn) }
             >
-              Remover
+              Remove Filter
             </button>
           </div>
         ))

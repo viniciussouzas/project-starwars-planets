@@ -81,6 +81,12 @@ describe('Testes da aplicação', () => {
       const filterComparison = await screen.findByTestId('comparison-filter');
       const filterValue = await screen.findByTestId('value-filter');
       const filterButton = await screen.findByTestId('button-filter');
+      const btnRemoveAll = await screen.findByTestId('button-remove-filters');
+
+      const btnRemoveFilter = screen.queryByRole('button', {
+        name: /remove filter/i,
+      });
+      expect(btnRemoveFilter).not.toBeInTheDocument();
 
       userEvent.selectOptions(filterColumn, 'diameter');
       expect(filterColumn).toHaveValue('diameter');
@@ -115,6 +121,62 @@ describe('Testes da aplicação', () => {
 
         const usedFilters = screen.getByTestId('filter');
         expect(usedFilters).toHaveTextContent('diameter maior que 10000');
+
+        const btnRemoveFilter = screen.getByRole('button', {
+          name: 'Remove Filter',
+        });
+        expect(btnRemoveFilter).toBeInTheDocument();
+  
+        userEvent.click(btnRemoveFilter);
+  
+        const filtersUsed = screen.queryByTestId('filter');
+        expect(filtersUsed).not.toBeInTheDocument();
+      });
+
+      expect(filterColumn.children).toHaveLength(5);
+
+      userEvent.selectOptions(filterColumn, 'surface_water');
+      expect(filterColumn).toHaveValue('surface_water');
+
+      userEvent.selectOptions(filterComparison, 'menor que')
+      expect(filterComparison).toHaveValue('menor que');
+
+      userEvent.clear(filterValue);
+      userEvent.type(filterValue, '50')
+      expect(filterValue).toHaveValue(50);
+
+      userEvent.click(filterButton);
+
+      userEvent.selectOptions(filterColumn, 'rotation_period');
+      expect(filterColumn).toHaveValue('rotation_period');
+
+      userEvent.selectOptions(filterComparison, 'menor que');
+      expect(filterComparison).toHaveValue('menor que');
+
+
+      userEvent.clear(filterValue);
+      userEvent.type(filterValue, '15')
+      expect(filterValue).toHaveValue(15);
+
+      userEvent.click(filterButton);
+
+      await waitFor(() => {
+        const table = screen.getAllByRole('cell');
+        expect(table).toHaveLength(13);
+
+        const bespinCell = screen.getByRole('cell', {
+          name: /bespin/i,
+        });
+        expect(bespinCell).toBeInTheDocument();
+
+        expect(filterColumn.children).toHaveLength(3);
+      });
+
+      userEvent.click(btnRemoveAll);
+
+      await waitFor(() => {
+        const table = screen.getAllByRole('cell');
+      expect(table).toHaveLength(130);
       });
     });
   });
